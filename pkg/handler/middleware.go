@@ -9,12 +9,12 @@ import (
 )
 
 const (
-	schoolCtx           = "schoolId"
+	userCtx             = "userId"
 	authorizationHeader = "Authorization"
 )
 
 // schoolIdentity инденцифицирует пользователя при запросах в пути /api/...
-func (h *Handler) schoolIdentity(c *gin.Context) {
+func (h *Handler) userIdentity(c *gin.Context) {
 	header := c.GetHeader(authorizationHeader)
 	if header == "" {
 		responseWithError(c, http.StatusUnauthorized, "empty auth header")
@@ -28,19 +28,19 @@ func (h *Handler) schoolIdentity(c *gin.Context) {
 		responseWithError(c, http.StatusUnauthorized, "token is empty")
 		return
 	}
-	schoolId, err := h.services.ParseToken(headerParts[1])
+	userId, err := h.services.ParseToken(headerParts[1])
 	if err != nil {
 		responseWithError(c, http.StatusUnauthorized, err.Error())
 		return
 	}
-	c.Set(schoolCtx, schoolId)
+	c.Set(userCtx, userId)
 }
 
-func getSchoolId(c *gin.Context) (string, error) {
-	data, ok := c.Get(schoolCtx)
+func getUserId(c *gin.Context) (string, error) {
+	data, ok := c.Get(userCtx)
 	if !ok {
-		return "", errors.New("schoolId not found")
+		return "", errors.New("userId not found")
 	}
-	schoolId := data.(string)
-	return schoolId, nil
+	userId := data.(string)
+	return userId, nil
 }

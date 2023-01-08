@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+
 	"github.com/Hymiside/wishlists-api/pkg/models"
 	_ "github.com/lib/pq"
 )

@@ -1,8 +1,15 @@
 package handler
 
 import (
+	"errors"
+
 	"github.com/Hymiside/wishlists-api/pkg/service"
 	"github.com/gin-gonic/gin"
+)
+
+var (
+	ErrParseJSON      = errors.New("error to parse json")
+	ErrInvalidRequest = errors.New("error invalid request")
 )
 
 type Handler struct {
