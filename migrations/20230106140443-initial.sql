@@ -6,8 +6,8 @@ create table users (
     nickname text unique not null,
     email text unique not null,
     password_hash text not null,
-    phone_number text,
-    image_url text
+    phone_number text default 'none',
+    image_url text default 'none'
 );
 
 create table wishes (
@@ -18,11 +18,11 @@ create table wishes (
     description text,
     price integer not null,
     link text not null,
-    image text
+    image text default 'none'
 );
 
 create table favorites (
-    id text unique primary key,
+    id serial unique primary key,
     user_id text not null
         references users (id),
     wish_id text not null
@@ -30,7 +30,7 @@ create table favorites (
 );
 
 create table subscribes_users (
-    id text unique not null,
+    id serial unique not null,
     user_id text not null
         references users (id),
     user_id_sub text not null

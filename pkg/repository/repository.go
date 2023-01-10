@@ -9,6 +9,7 @@ import (
 )
 
 var (
+	ErrUserNotFound       = errors.New("user not found")
 	ErrItemsNotFound      = errors.New("items not found")
 	ErrScanItems          = errors.New("error scan items")
 	ErrQueryItems         = errors.New("error get items from db")
@@ -21,12 +22,18 @@ type Authorization interface {
 	GetUser(email string) (models.User, error)
 }
 
+type PersonalCabinet interface {
+	GetProfile(userId string) (map[string]string, error)
+}
+
 type Repository struct {
 	Authorization
+	PersonalCabinet
 }
 
 func NewRepository(db *sql.DB) *Repository {
 	return &Repository{
-		Authorization: NewAuthPostgres(db),
+		Authorization:   NewAuthPostgres(db),
+		PersonalCabinet: NewProfilePostgres(db),
 	}
 }

@@ -22,3 +22,5 @@ type User struct {
 	PhoneNumber string `json:"phone_number,omitempty" db:"phone_number"`
 	ImageURL    string `json:"image_url,omitempty" db:"image_url"`
 }
+
+type Account struct{}

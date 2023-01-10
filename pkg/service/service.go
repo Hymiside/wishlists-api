@@ -7,11 +7,8 @@ import (
 	"github.com/Hymiside/wishlists-api/pkg/repository"
 )
 
-type Service struct {
-	Authorization
-}
-
 var (
+	ErrReadImage   = errors.New("error read image")
 	ErrCreateJWT   = errors.New("error create jwt-token")
 	ErrInvalidPwd  = errors.New("invalid password")
 	ErrTokenClaims = errors.New("token claims are not of type *tokenClaims")
@@ -26,8 +23,18 @@ type Authorization interface {
 	ParseToken(token string) (string, error)
 }
 
+type Profile interface {
+	GetProfile(userId string) (map[string]string, error)
+}
+
+type Service struct {
+	Authorization
+	Profile
+}
+
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
 		Authorization: NewAuthService(repos.Authorization),
+		Profile:       NewProfile(repos.PersonalCabinet),
 	}
 }

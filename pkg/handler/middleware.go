@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"errors"
 	"net/http"
 	"strings"
 
@@ -18,6 +17,7 @@ func (h *Handler) userIdentity(c *gin.Context) {
 	header := c.GetHeader(authorizationHeader)
 	if header == "" {
 		responseWithError(c, http.StatusUnauthorized, "empty auth header")
+		return
 	}
 	headerParts := strings.Split(header, " ")
 	if len(headerParts) != 2 || headerParts[0] != "Bearer" {
@@ -39,7 +39,7 @@ func (h *Handler) userIdentity(c *gin.Context) {
 func getUserId(c *gin.Context) (string, error) {
 	data, ok := c.Get(userCtx)
 	if !ok {
-		return "", errors.New("userId not found")
+		return "", ErrUserIdNotFound
 	}
 	userId := data.(string)
 	return userId, nil
