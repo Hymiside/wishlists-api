@@ -8,6 +8,9 @@ import (
 )
 
 var (
+	ErrWriteImage  = errors.New("error write image")
+	ErrDecodeImage = errors.New("error decode image")
+	ErrCreateImage = errors.New("error create image")
 	ErrReadImage   = errors.New("error read image")
 	ErrCreateJWT   = errors.New("error create jwt-token")
 	ErrInvalidPwd  = errors.New("invalid password")
@@ -25,6 +28,8 @@ type Authorization interface {
 
 type Profile interface {
 	GetProfile(userId string) (map[string]string, error)
+	GetWishes(userId string) ([]models.Wish, error)
+	CreateWish(wish models.Wish) (string, error)
 }
 
 type Service struct {

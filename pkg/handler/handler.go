@@ -44,7 +44,11 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	api := router.Group("/api", h.userIdentity)
 	{
 		api.GET("/profile", h.profile)
-		api.GET("/favorites")
+		api.GET("/wishes", h.wishes)
+		api.POST("/create-wish", h.createWish)
+		api.GET("/favorites", h.favorites)
+		api.POST("/update")
+
 		api.GET("/user/:nickname")
 
 	}

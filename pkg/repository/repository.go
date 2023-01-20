@@ -9,12 +9,12 @@ import (
 )
 
 var (
-	ErrUserNotFound       = errors.New("user not found")
-	ErrItemsNotFound      = errors.New("items not found")
-	ErrScanItems          = errors.New("error scan items")
-	ErrQueryItems         = errors.New("error get items from db")
-	ErrUniqueKeyViolation = errors.New("key unique violation")
-	ErrCreateUser         = errors.New("error create user")
+	ErrUserNotFound       = errors.New("user not found")          // Не нашел пользователя в БД
+	ErrItemsNotFound      = errors.New("items not found")         // Объект не наден в БД
+	ErrScanItems          = errors.New("error scan items")        // Ошибка сканирования объекта row после запроса в БД
+	ErrQueryItems         = errors.New("error get items from db") // Ошибка при запросе в БД
+	ErrUniqueKeyViolation = errors.New("key unique violation")    // Нарушение уникальности в таблице
+	ErrCreateUser         = errors.New("error create user")       // Не удалось создать пользователя, по никому неизвестной причине
 )
 
 type Authorization interface {
@@ -24,6 +24,7 @@ type Authorization interface {
 
 type PersonalCabinet interface {
 	GetProfile(userId string) (map[string]string, error)
+	GetWishes(userId string) ([]models.Wish, error)
 }
 
 type Repository struct {

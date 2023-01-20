@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"github.com/Hymiside/wishlists-api/pkg/models"
 	"time"
 )
 
@@ -59,4 +60,31 @@ func (p *ProfilePostgres) GetProfile(userId string) (map[string]string, error) {
 	}
 
 	return res, nil
+}
+
+func (p *ProfilePostgres) GetWishes(userId string) ([]models.Wish, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
+
+	request := fmt.Sprintf("select * from wishes where user_id = $1")
+
+	rows, err := p.db.QueryContext(ctx, request, userId)
+	if err != nil {
+		return nil, ErrQueryItems
+	}
+
+	var wishes []models.Wish
+	for rows.Next() {
+		var wish models.Wish
+
+		if err = rows.Scan(&wish.Id, &wish.UserId, &wish.Title, &wish.Description, &wish.Price,
+			&wish.Link, &wish.ImageURL); err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				return nil, ErrItemsNotFound
+			}
+			return nil, err
+		}
+		wishes = append(wishes, wish)
+	}
+	return wishes, nil
 }

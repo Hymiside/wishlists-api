@@ -18,29 +18,33 @@ create table wishes (
     description text,
     price integer not null,
     link text not null,
-    image text default 'none'
+    image_url text default 'none'
 );
 
 create table favorites (
     id serial unique primary key,
-    user_id text not null
-        references users (id),
-    wish_id text not null
-        references wishes (id)
+    user_id text not null references users (id),
+    wish_id text not null references wishes (id)
 );
 
 create table subscribes_users (
     id serial unique not null,
-    user_id text not null
-        references users (id),
-    user_id_sub text not null
-        references users (id)
+    user_id text not null references users (id),
+    user_id_sub text not null references users (id)
 );
+
+create table admins (
+    id serial primary key,
+    login text,
+    password text
+);
+
+insert into admins (login, password) values ('admin', 'admin');
 
 create unique index on users (id);
 create unique index on users (nickname);
 create unique index on users (email);
-create unique index on users (phone_number);
+create index on users (phone_number);
 
 create index on wishes (id);
 create index on wishes (user_id);
