@@ -1,50 +1,55 @@
 
 -- +migrate Up
-create table users (
-    id text unique primary key,
-    name text not null,
-    nickname text unique not null,
-    email text unique not null,
-    password_hash text not null,
-    phone_number text default 'none',
-    image_url text default 'none'
+CREATE TABLE users (
+    id TEXT PRIMARY KEY ,
+    name TEXT NOT NULL,
+    nickname TEXT UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL ,
+    phone_number TEXT,
+    image_url TEXT
 );
 
-create table wishes (
-    id text unique primary key,
-    user_id text unique not null
-        references users (id),
-    title text not null,
-    description text,
-    price integer not null,
-    link text not null,
-    image_url text default 'none'
+CREATE TABLE wishes (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    price BIGINT NOT NULL,
+    link TEXT NOT NULL ,
+    image_url TEXT,
+
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-create table favorites (
-    id serial unique primary key,
-    user_id text not null references users (id),
-    wish_id text not null references wishes (id)
+CREATE TABLE favorites (
+    id SERIAL PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    wish_id TEXT NOT NULL,
+
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (wish_id) REFERENCES wishes(id) ON DELETE CASCADE
 );
 
-create table subscribes_users (
-    id serial unique not null,
-    user_id text not null references users (id),
-    user_id_sub text not null references users (id)
+CREATE TABLE subscribes_users (
+    id SERIAL PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    user_id_sub TEXT NOT NULL,
+
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id_sub) REFERENCES users(id) ON DELETE CASCADE
 );
 
-create table admins (
-    id serial primary key,
-    login text,
-    password text
+CREATE TABLE admins (
+    id SERIAL PRIMARY KEY,
+    login TEXT NOT NULL,
+    password TEXT NOT NULL
 );
 
 insert into admins (login, password) values ('admin', 'admin');
 
 create unique index on users (id);
 create unique index on users (nickname);
-create unique index on users (email);
-create index on users (phone_number);
 
 create index on wishes (id);
 create index on wishes (user_id);

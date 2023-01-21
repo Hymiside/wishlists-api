@@ -62,7 +62,7 @@ func (p *ProfileService) GetWishes(userId string) ([]models.Wish, error) {
 	}
 
 	for i, wish := range wishes {
-		if wish.ImageURL != "none" {
+		if wish.ImageURL != "" {
 			var (
 				bytes       []byte
 				base64Image string
@@ -92,7 +92,12 @@ func (p *ProfileService) CreateWish(wish models.Wish) (string, error) {
 	wish.Id = uuid.New().String()
 
 	if wish.ImageURL == "" {
-		// TODO
+		wishId, err := p.repo.CreateWish(wish)
+		if err != nil {
+			// TODO сделаг лог
+			return "", err
+		}
+		return wishId, nil
 	}
 
 	f1 := strings.Index(wish.ImageURL, ":")
@@ -115,8 +120,12 @@ func (p *ProfileService) CreateWish(wish models.Wish) (string, error) {
 		wish.ImageURL = fmt.Sprintf("pkg/images/wishes/%s.png", wish.Id)
 	}
 
-	// TODO
-	return "", nil
+	wishId, err := p.repo.CreateWish(wish)
+	if err != nil {
+		// TODO сделаг лог
+		return "", err
+	}
+	return wishId, nil
 }
 
 func writeImage(imgBase64, typeImg, wishId string) error {

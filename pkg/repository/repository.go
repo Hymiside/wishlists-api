@@ -9,6 +9,7 @@ import (
 )
 
 var (
+	ErrCreateItem         = errors.New("error create item")
 	ErrUserNotFound       = errors.New("user not found")          // Не нашел пользователя в БД
 	ErrItemsNotFound      = errors.New("items not found")         // Объект не наден в БД
 	ErrScanItems          = errors.New("error scan items")        // Ошибка сканирования объекта row после запроса в БД
@@ -25,6 +26,7 @@ type Authorization interface {
 type PersonalCabinet interface {
 	GetProfile(userId string) (map[string]string, error)
 	GetWishes(userId string) ([]models.Wish, error)
+	CreateWish(wish models.Wish) (string, error)
 }
 
 type Repository struct {

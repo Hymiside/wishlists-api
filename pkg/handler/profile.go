@@ -6,6 +6,7 @@ import (
 	"github.com/Hymiside/wishlists-api/pkg/repository"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 func (h *Handler) profile(c *gin.Context) {
@@ -53,13 +54,13 @@ func (h *Handler) createWish(c *gin.Context) {
 
 	var data models.Wish
 	if err = c.BindJSON(&data); err != nil {
-		responseWithError(c, http.StatusBadRequest, ErrParseJSON.Error())
+		responseWithError(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	//if data.Title == "" || strconv.Itoa(data.Price) == "" || data.Link == "" {
-	//	responseWithError(c, http.StatusBadRequest, ErrInvalidRequest.Error())
-	//	return
-	//}
+	if data.Title == "" || strconv.Itoa(data.Price) == "" || data.Link == "" {
+		responseWithError(c, http.StatusBadRequest, ErrInvalidRequest.Error())
+		return
+	}
 	data.UserId = userId
 
 	var wishId string

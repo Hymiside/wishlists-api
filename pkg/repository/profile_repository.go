@@ -28,7 +28,10 @@ func (p *ProfilePostgres) GetProfile(userId string) (map[string]string, error) {
 		return nil, ErrQueryItems
 	}
 
-	var id, name, nickname, imageUrl string
+	var (
+		id, name, nickname string
+		imageUrl           sql.NullString
+	)
 	if err := row.Scan(&id, &name, &nickname, &imageUrl); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, ErrUserNotFound
@@ -56,7 +59,7 @@ func (p *ProfilePostgres) GetProfile(userId string) (map[string]string, error) {
 		"nickname":      nickname,
 		"subscribes":    numSubscribers,
 		"subscriptions": numSubscriptions,
-		"image_base64":  imageUrl,
+		"image_base64":  imageUrl.String,
 	}
 
 	return res, nil
@@ -82,9 +85,24 @@ func (p *ProfilePostgres) GetWishes(userId string) ([]models.Wish, error) {
 			if errors.Is(err, sql.ErrNoRows) {
 				return nil, ErrItemsNotFound
 			}
-			return nil, err
+			return nil, ErrScanItems
 		}
 		wishes = append(wishes, wish)
 	}
 	return wishes, nil
+}
+
+func (p *ProfilePostgres) CreateWish(wish models.Wish) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
+
+	request := fmt.Sprintf("insert into wishes (id, user_id, title, description, price, link, image_url) values ($1, $2, $3, $4, $5, $6, $7)" +
+		"returning id;")
+
+	var wishId string
+	if err := p.db.QueryRowContext(ctx, request, wish.Id, wish.UserId, wish.Title, wish.Description,
+		wish.Price, wish.Link, wish.ImageURL).Scan(&wishId); err != nil {
+		return "", ErrCreateItem
+	}
+	return wishId, nil
 }
