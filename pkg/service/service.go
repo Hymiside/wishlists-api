@@ -30,6 +30,7 @@ type Profile interface {
 	GetProfile(userId string) (map[string]string, error)
 	GetWishes(userId string) ([]models.Wish, error)
 	CreateWish(wish models.Wish) (string, error)
+	GetFavorites(userId string) ([]map[string]string, error)
 }
 
 type Service struct {
@@ -40,6 +41,6 @@ type Service struct {
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
 		Authorization: NewAuthService(repos.Authorization),
-		Profile:       NewProfile(repos.PersonalCabinet),
+		Profile:       NewProfile(repos.Profile),
 	}
 }

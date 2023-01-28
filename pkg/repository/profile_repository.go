@@ -106,3 +106,8 @@ func (p *ProfilePostgres) CreateWish(wish models.Wish) (string, error) {
 	}
 	return wishId, nil
 }
+
+func (p *ProfilePostgres) GetFavorites(userId string) (map[string]string, error) {
+	//TODO implement me
+	panic("implement me")
+}

@@ -23,20 +23,21 @@ type Authorization interface {
 	GetUser(email string) (models.User, error)
 }
 
-type PersonalCabinet interface {
+type Profile interface {
 	GetProfile(userId string) (map[string]string, error)
 	GetWishes(userId string) ([]models.Wish, error)
 	CreateWish(wish models.Wish) (string, error)
+	GetFavorites(userId string) (map[string]string, error)
 }
 
 type Repository struct {
 	Authorization
-	PersonalCabinet
+	Profile
 }
 
 func NewRepository(db *sql.DB) *Repository {
 	return &Repository{
-		Authorization:   NewAuthPostgres(db),
-		PersonalCabinet: NewProfilePostgres(db),
+		Authorization: NewAuthPostgres(db),
+		Profile:       NewProfilePostgres(db),
 	}
 }

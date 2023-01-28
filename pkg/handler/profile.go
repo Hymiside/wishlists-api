@@ -73,9 +73,10 @@ func (h *Handler) createWish(c *gin.Context) {
 }
 
 func (h *Handler) favorites(c *gin.Context) {
-	//userId, err := getUserId(c)
-	//if err != nil {
-	//	responseWithError(c, http.StatusUnauthorized, err.Error())
-	//	return
-	//}
+	userId, err := getUserId(c)
+	if err != nil {
+		responseWithError(c, http.StatusUnauthorized, err.Error())
+		return
+	}
+
 }

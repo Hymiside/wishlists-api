@@ -16,7 +16,7 @@ CREATE TABLE wishes (
     title TEXT NOT NULL,
     description TEXT,
     price BIGINT NOT NULL,
-    link TEXT NOT NULL ,
+    link TEXT NOT NULL,
     image_url TEXT,
 
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
